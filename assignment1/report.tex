@@ -1,0 +1,168 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2345678901234567890123456789012345678901234567890123456789012345678901234567890
+%        1         2         3         4         5         6         7         8
+
+\documentclass[letterpaper, 10 pt, conference]{ieeeconf}  % Comment this line out
+                                                          % if you need a4paper
+%\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4
+                                                          % paper
+
+\IEEEoverridecommandlockouts                              % This command is only
+                                                          % needed if you want to
+                                                          % use the \thanks command
+\overrideIEEEmargins
+% See the \addtolength command later in the file to balance the column lengths
+% on the last page of the document
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{float}
+
+% The following packages can be found on http:\\www.ctan.org
+%\usepackage{graphics} % for pdf, bitmapped graphics files
+%\usepackage{epsfig} % for postscript graphics files
+%\usepackage{mathptmx} % assumes new font selection scheme installed
+%\usepackage{times} % assumes new font selection scheme installed
+%\usepackage{amsmath} % assumes amsmath package installed
+%\usepackage{amssymb}  % assumes amsmath package installed
+
+\title{\LARGE \bf
+IMCL630E Assignment 1 - Linear Regression
+}
+
+%\author{ \parbox{3 in}{\centering Huibert Kwakernaak*
+%         \thanks{*Use the $\backslash$thanks command to put information here}\\
+%         Faculty of Electrical Engineering, Mathematics and Computer Science\\
+%         University of Twente\\
+%         7500 AE Enschede, The Netherlands\\
+%         {\tt\small h.kwakernaak@autsubmit.com}}
+%         \hspace*{ 0.5 in}
+%         \parbox{3 in}{ \centering Pradeep Misra**
+%         \thanks{**The footnote marks may be inserted manually}\\
+%        Department of Electrical Engineering \\
+%         Wright State University\\
+%         Dayton, OH 45435, USA\\
+%         {\tt\small pmisra@cs.wright.edu}}
+%}
+
+\author{
+Neil Leeson Syiemlieh \\
+(IIT2016125)
+}
+
+
+\begin{document}
+
+
+
+\maketitle
+\thispagestyle{empty}
+\pagestyle{empty}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+Linear Regression is a method of mapping an independent variable to a response (dependent) variable through a linear combination of the components of the independent variable. The parameters of this mapping are adjusted by learning the patterns that are observed in a provided
+dataset. In this study, we observe and compare the accuracies of three different models of linear regression:
+\begin{itemize}
+  \item Simple Linear Regression
+  \item Ridge Regression
+  \item Lasso Regression
+\end{itemize}
+\end{abstract}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{INTRODUCTION}
+Regression is a common problem that's tackled in machine learning, where patterns need to be observed between input variables and output variables in a dataset. The input variables are commonly vectors, where each component of a vector describes a feature of that vector, while the ouput variables are scalars, which are observed as being dependent on each of their corresponding vectors in the data. Regression is used to learn on data that has continuous-valued outputs. Linear regression aims to find a linear function that approximates the pattern in the data (also known as fitting) and uses that approximation to predict the output when the model is given an input that it hasn't seen before.
+
+\section{PARTS OF THE LINEAR\\REGRESSION MODEL}
+
+\subsection{Hypothesis}
+The hypothesis in is a function that maps from an independent variable to a dependent variable. This function describes that dependency. In linear regression, this function is linear. If the parameters of the hypothesis are given by the vector $\theta \in R^{n+1}$, the hypothesis is defined as
+\[h_\theta(x) = \theta^T x \quad where\ x \in R^{n+1}\]
+where $n$ is the number of features in each input vector, before augmenting it with a 0-component of value '1' (turning it into a vector in $R^{n+1}$).
+
+\subsection{Cost Function}
+The cost function $J(\theta)$ of the linear regression model gives us a value that represents the error that the model currently has, in approximating the training data. This function is defined as the squared error of the model over the $M$ training data samples, given the model's parameters, $\theta$.
+\[J(\theta) = \sum_{i=1}^{M}(h_\theta(x_i) - y_i)^2\]
+However, this basic form of the cost function is the one used in a simple regression model only. What differentiates the other two models -- Ridge and Lasso -- from the simple model is that these two include a parameter called the regularisation parameter $\lambda$, which is explained below.
+
+\subsection{Gradient Descent}
+For linear regression, the cost function $J(\theta)$ is a convex function. Hence, the aim of training the model is to minimize this function over $\theta$. The algorithm used for this minimization is Gradient Descent.
+
+The algorithm states that on each iteration, every  $j^{th}$ parameter of the model ($\theta_j$) will be updated such that function $J(\theta)$ moves in the direction of the negative of its gradient $\nabla J(\theta)$, until it reaches the minimum value of $J(\theta)$. More formally:
+\begin{align*}
+Repeat\ & until\ convergence: \\
+& \theta_j \gets \theta_j - \alpha \frac{\partial J(\theta)}{\partial \theta_j}\ for\ j \in \{0,1..n\}
+\end{align*}
+Here we introduce the learning rate parameter $\alpha$, which scales the partial derivative $w.r.t.$ each $\theta_j$. This will essentially scale the step size of the movement of $\theta$ towards the minimum of $J$. This means that a larger $\alpha$ will result in faster convergence, provided it's not too large (otherwise it might not converge).
+
+\subsection{Regularization}
+Every regression model is susceptible to overfitting. This results in highly accurate predictions over the training data, but inaccurate predictions over new data. To prevent fitting too tightly over the training data, we introduce a penalty to the cost function. This penalty is a term that includes a combination of the regularization parameter $\lambda$ and the parameters of the model $\theta$. By including this term in $J$, the optimization problem of minimizing $J$ over $\theta$ will prevent $\theta$ from getting quite large, hence reducing it's effect on the hypothesis. This essentially prevents the model from over fitting on the training data.
+
+The two models that include the penalty in their cost function are the Ridge and Lasso regression models. Their respective cost functions are as follows:
+\begin{itemize}
+  \item Ridge Regression
+    \[J(\theta) = \sum_{i=1}^{M}(h_\theta(x_i) - y_i)^2 + \lambda \sum_{j=0}^{n}\theta_j^2\]
+  \item Lasso Regression
+    \[J(\theta) = \sum_{i=1}^{M}(h_\theta(x_i) - y_i)^2 + \lambda \sum_{j=0}^{n}||\theta_j||\]
+\end{itemize}
+
+\section{IMPLEMENTATION}
+The implementation of the linear regression models has been done in Python. The conventional technology stack of libraries popular with most Python data science projects has been used, which includes numpy, pandas and matplotlib.
+
+\subsection{Preprocessing}
+The dataset was preprocessed in the following steps before feeding it to our model:
+\begin{enumerate}
+    \item Handling missing data - A missing feature of any data sample was set to the mean of all the entries corresponding to that feature.
+    \item Encoding categorical features - Categorical features were one-hot encoded.
+    \item Feature scaling - All feature entries were scaled using the range of their respective feature.
+\end{enumerate}
+
+\subsection{Fitting}
+Two models from each type were made, one being given a learning rate of 0.005 and the other 0.01. Hence, six models were made in total. The Lasso and Ridge models were given a regularization parameter of 0.05. All six models were trained for 100 iterations of the gradient descent algorithm.
+
+\subsection{Testing}
+All six models were tested for their accuracy using the explained variance regression score. If $\hat{y}$ is the vector predicted values from the test inputs and $y$ is the vector of actual values, the explained variance regression score is defined as:
+\[explained\_variance(y, \hat{y}) = 1-\frac{Var(y-\hat{y})}{Var(y)}\]
+where $Var(x)$ is the variance of distribution $x$.
+
+\section{OBSERVATIONS}
+The first observation is the change in the cost function of the models over the iterations of the gradient descent algorithm. Then we look at a table comparing their accuracies during the testing phase.
+
+The first comparison we make is between all three model types that have been given a learning rate of 0.005 (Figure 1). We see here that the Lasso and Simple regression models (in blue, masked by the Lasso regression curve) both converge at a much lower cost function than the Ridge regression model. This is because the Ridge model heavily penalises the cost function, causing it to fit a lot less than the other models on the training data.
+
+\begin{figure}[H]
+\includegraphics[scale=0.35]{alpha1.png}
+\caption{Cost function with learning rate 0.005}
+\end{figure}
+
+The second comparison is of all three models again, but with a learning rate of 0.01 (Figure 2). Since this learning rate is much greater than the previous, all three models here converge faster than their previously seen counterparts. Relative to each other, the three models here show a relationship similar to what we saw in the previous scenario.
+
+\begin{figure}[H]
+\includegraphics[scale=0.35]{alpha2.png}
+\caption{Cost function with learning rate 0.01}
+\end{figure}
+
+The accuracies have been given in Table 1. Note that all the regularised models have a regularisation parameter $\lambda$ = 0.05. We observe here that the Ridge model is the most accurate, followed by Lasso and then the simple model, although the improvement is by a small margin. This is due to the overfitting of the simple model and a little less of it on the Lasso model. Secondly, we observe that for each model, the one with the higher learning rate ($\alpha$ = 0.01) not only converged faster, but scored higher on accuracy as well.
+
+\begin{table}[H]
+\caption{Accuracies of the models}
+\label{model_accuracy}
+\begin{center}
+\begin{tabular}{|c||c|c|}
+\hline
+& $\alpha = 0.005$ & $\alpha = 0.01$ \\
+\hline\hline
+Simple & 87.237437 & 87.238455 \\
+Lasso & 87.237439 & 87.238457 \\
+Ridge & 87.241265 & 87.242282 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\section{CONCLUSION}
+This study demonstrated the differences in convergence and accuracies of three linear regression models. From it, we can conclude that a moderately small learning rate such as 0.01 would give us faster convergence and marginally higher accuracy than an excessively small one like 0.005, and that we can gain a higher accuracy by regularising our model with a significant penalty, such as that used in the Ridge regression model.
+
+\end{document}
