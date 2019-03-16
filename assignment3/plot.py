@@ -26,7 +26,6 @@ def plot_scatter_boundary(model, X_set, y_set, title, step_size=0.1, xlabel='x1'
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.legend()
-    plt.show()
 
 def plot_clusters(cluster_model, X_set, title, xlabel='x1', ylabel='x2'):
     '''Plot the cluster centroids,
@@ -57,4 +56,3 @@ def plot_clusters(cluster_model, X_set, title, xlabel='x1', ylabel='x2'):
     plt.ylabel(ylabel)
     plt.title(title)
     plt.legend(handles=[movement_path, init_loc, final_loc])
-    plt.show()
